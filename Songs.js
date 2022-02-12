@@ -1,36 +1,49 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import Colors from "./Themes/colors";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Songs({
   name,
   url,
-  track_number,
   album,
   artists,
   duration,
-  id,
+  external_urls,
+  preview_url,
+  navigation,
 }) {
   return (
-    <View style={styles.track}>
-      <Text style={styles.tracknum}>{track_number}</Text>
-      <Image
-        style={styles.image}
-        source={{
-          uri: url,
-        }}
-      />
-      <View>
-        <Text style={styles.name} numberOfLines={1}>
-          {name}
+    <Pressable
+      onPress={() => navigation.navigate("Details", { webview: external_urls })}
+    >
+      <View style={styles.track}>
+        <Pressable
+          onPress={(e) => {
+            e.stopPropagation();
+            navigation.navigate("Preview", { webview: preview_url });
+          }}
+        >
+          <Ionicons name="md-play-circle" size={24} color={Colors.spotify} />
+        </Pressable>
+        <Image
+          style={styles.image}
+          source={{
+            uri: url,
+          }}
+        />
+        <View>
+          <Text style={styles.name} numberOfLines={1}>
+            {name}
+          </Text>
+          <Text style={styles.artist}>{artists}</Text>
+        </View>
+        <Text style={styles.album} numberOfLines={1}>
+          {album}
         </Text>
-        <Text style={styles.artist}>{artists}</Text>
+        <Text style={styles.duration}>{duration}</Text>
       </View>
-      <Text style={styles.album} numberOfLines={1}>
-        {album}
-      </Text>
-      <Text style={styles.duration}>{duration}</Text>
-    </View>
+    </Pressable>
   );
 }
 
@@ -85,5 +98,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     justifyContent: "flex-start",
     marginHorizontal: 5,
+    marginLeft: 16,
   },
 });
